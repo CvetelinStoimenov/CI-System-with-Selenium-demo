@@ -3,7 +3,7 @@ name: Selenium IDE CI
 on:
   push:
     branches:
-      - maine
+      - main
   pull_request:
     branches:
       - main
