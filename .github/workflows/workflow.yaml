@@ -7,24 +7,38 @@ on:
   pull_request:
     branches:
       - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      
+
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-versions: '6.0.x'
-        
+        dotnet-version: '6.0.x'
+
+    - name: Install Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+
     - name: Install dependencies
       run: dotnet restore
-      
+
     - name: Build
       run: dotnet build --no-restore
-        
+
+    - name: Set execute permissions for selenium-manager
+      run: chmod +x /home/runner/work/CI-System-with-Selenium-demo/CI-System-with-Selenium-demo/SeleniumIDE/bin/Debug/net6.0/selenium-manager/linux/selenium-manager
+
+    - name: List directory contents for debugging
+      run: ls -la /home/runner/work/CI-System-with-Selenium-demo/CI-System-with-Selenium-demo/SeleniumIDE/bin/Debug/net6.0/selenium-manager/linux
+
     - name: Run tests
+      env:
+        CHROMEWEBDRIVER: /usr/bin/google-chrome
       run: dotnet test --verbosity normal
